@@ -1,12 +1,21 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import { Link, Route } from 'react-router-dom'
 import BookShelf from './BookShelf'
 import './App.css'
 
 class BooksApp extends React.Component {
   state = {
+    books: []
+  }
 
+  componentDidMount() {
+    BooksAPI.getAll()
+    .then((books) => {
+      this.setState(() => ({
+         books
+      }));
+    })
   }
 
   render() {
@@ -42,7 +51,9 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              <BookShelf/>
+              <BookShelf books={this.state.books} title="Currently Reading" filter="currentlyReading" />
+              <BookShelf books={this.state.books} title="Want to Read" filter="wantToRead" />
+              <BookShelf books={this.state.books} title="Read" filter="read" />
             </div>
             <div className="open-search">
               <Link  
