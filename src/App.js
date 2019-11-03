@@ -6,19 +6,35 @@ import './App.css'
 
 class BooksApp extends React.Component {
   state = {
-    books: []
+    books: [],
   }
 
   componentDidMount() {
     BooksAPI.getAll()
     .then((books) => {
       this.setState(() => ({
-         books
-      }));
+        books: books,
+      }))
     })
   }
 
+  moveBook = (book, shelf) => {
+    BooksAPI.update(book, shelf)
+      .then(() => {
+        BooksAPI.getAll()
+          .then((books) => {
+            this.setState(() => ({
+              books: books
+            }))
+          })
+      })
+  }
+
   render() {
+    let currentlyReading = this.state.books.filter((book) => book.shelf === 'currentlyReading');
+    let wantToRead = this.state.books.filter((book) => book.shelf === 'wantToRead');
+    let read = this.state.books.filter((book) => book.shelf === 'read');
+
     return (
       <div className="app">
         <Route path='/search' render={() => (
@@ -51,9 +67,21 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              <BookShelf books={this.state.books} title="Currently Reading" filter="currentlyReading" />
-              <BookShelf books={this.state.books} title="Want to Read" filter="wantToRead" />
-              <BookShelf books={this.state.books} title="Read" filter="read" />
+              <BookShelf 
+                books={currentlyReading} 
+                title="Currently Reading" 
+                onMoveBook={this.moveBook} 
+              />
+              <BookShelf 
+                books={wantToRead} 
+                title="Want to Read" 
+                onMoveBook={this.moveBook}  
+              />
+              <BookShelf 
+                books={read} 
+                title="Read" 
+                onMoveBook={this.moveBook}  
+              />
             </div>
             <div className="open-search">
               <Link  
