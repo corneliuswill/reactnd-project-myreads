@@ -207,3 +207,7 @@ button:active {
   text-align: center;
   font-size: 0.8em;
 }
+
+.message {
+  text-align: center;
+}
