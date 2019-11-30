@@ -11,8 +11,8 @@ class ListBooks extends Component {
     }
 
     updateQuery = (query) => {
-        this.setState({ query: query.trim() });
-        BooksAPI.search(query)
+        this.setState({ query: query });
+        BooksAPI.search(query.trim())
             .then((books) => {
                 this.setState({ books })
             })
